@@ -1,0 +1,254 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "OpenAPI definition",
+        "version": "v0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8081",
+            "description": "Generated server url"
+        }
+    ],
+    "tags": [
+        {
+            "name": "Veterinarians",
+            "description": "Endpoints para gestão de veterinários"
+        }
+    ],
+    "paths": {
+        "/api/vets": {
+            "get": {
+                "tags": [
+                    "Veterinarians"
+                ],
+                "summary": "Listar todos os veterinários",
+                "description": "Retorna uma lista paginada de todos os veterinários com suas especialidades.",
+                "operationId": "getAllVets",
+                "parameters": [
+                    {
+                        "name": "pageable",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/components/schemas/Pageable"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista recuperada com sucesso",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PageVetDTO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/vets/{vetId}": {
+            "get": {
+                "tags": [
+                    "Veterinarians"
+                ],
+                "summary": "Obter detalhes de um veterinário",
+                "description": "Retorna os detalhes de um veterinário específico pelo seu ID.",
+                "operationId": "getVetById",
+                "parameters": [
+                    {
+                        "name": "vetId",
+                        "in": "path",
+                        "description": "ID do veterinário a ser recuperado",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "responses": {
+                    "404": {
+                        "description": "Veterinário não encontrado",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/VetDTO"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "Veterinário encontrado",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/VetDTO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Pageable": {
+                "type": "object",
+                "properties": {
+                    "page": {
+                        "minimum": 0,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "size": {
+                        "minimum": 1,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "sort": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "PageVetDTO": {
+                "type": "object",
+                "properties": {
+                    "totalPages": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "totalElements": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "pageable": {
+                        "$ref": "#/components/schemas/PageableObject"
+                    },
+                    "size": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "content": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/VetDTO"
+                        }
+                    },
+                    "number": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "sort": {
+                        "$ref": "#/components/schemas/SortObject"
+                    },
+                    "numberOfElements": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "first": {
+                        "type": "boolean"
+                    },
+                    "last": {
+                        "type": "boolean"
+                    },
+                    "empty": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "PageableObject": {
+                "type": "object",
+                "properties": {
+                    "pageNumber": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "pageSize": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "offset": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "sort": {
+                        "$ref": "#/components/schemas/SortObject"
+                    },
+                    "paged": {
+                        "type": "boolean"
+                    },
+                    "unpaged": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "SortObject": {
+                "type": "object",
+                "properties": {
+                    "sorted": {
+                        "type": "boolean"
+                    },
+                    "empty": {
+                        "type": "boolean"
+                    },
+                    "unsorted": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "SpecialtyDTO": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "description": "ID único da especialidade",
+                        "format": "int32",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Nome da especialidade",
+                        "example": "radiology"
+                    }
+                },
+                "description": "Representação de uma especialidade veterinária"
+            },
+            "VetDTO": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "description": "ID único do veterinário",
+                        "format": "int32",
+                        "example": 1
+                    },
+                    "firstName": {
+                        "type": "string",
+                        "description": "Primeiro nome",
+                        "example": "James"
+                    },
+                    "lastName": {
+                        "type": "string",
+                        "description": "Último nome",
+                        "example": "Carter"
+                    },
+                    "specialties": {
+                        "type": "array",
+                        "description": "Lista de especialidades do veterinário",
+                        "items": {
+                            "$ref": "#/components/schemas/SpecialtyDTO"
+                        }
+                    }
+                },
+                "description": "Representação de um veterinário"
+            }
+        }
+    }
+}
